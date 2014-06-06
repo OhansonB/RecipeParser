@@ -1,9 +1,14 @@
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.io.FileUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -14,6 +19,7 @@ public class OutputGUI extends JFrame {
 
     JTextArea textArea;
     ArrayList<Document> documentArray;
+    String output;
 
     OutputGUI(ArrayList<Document> docArray) {
         documentArray = docArray;
@@ -37,11 +43,27 @@ public class OutputGUI extends JFrame {
 
     public JButton getEmailBtn() {
         JButton emailBtn = new JButton("Send to email");
+        emailBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new EmailUI(output);
+            }
+        });
         return emailBtn;
     }
 
     public JButton getSaveBtn() {
         JButton saveBtn = new JButton("Save to file");
+        saveBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    FileUtils.writeStringToFile(new File("AllRecipes.co.uk ingredients list.txt"), output);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
         return saveBtn;
     }
 
@@ -56,7 +78,7 @@ public class OutputGUI extends JFrame {
     }
 
     public String parseDocuments(ArrayList<Document> arrayList) {
-        String output = new String();
+        output = new String();
 
         for (Document doc : arrayList) {
             Elements elements = doc.select("meta[name=title]");

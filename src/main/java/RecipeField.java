@@ -11,7 +11,6 @@ public class RecipeField {
 
     RecipeField(JPanel parentPanel) {
 
-
         JLabel label = new JLabel("URL of recipe: ");
         textField = new JTextField(50);
 
